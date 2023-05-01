@@ -241,34 +241,41 @@
         <member name="M:Kucoin.Net.Clients.FuturesApi.KucoinSocketClientFuturesStreams.UnsubscribeAsync(CryptoExchange.Net.Sockets.SocketConnection,CryptoExchange.Net.Sockets.SocketSubscription)">
             <inheritdoc />
         </member>
-        <member name="T:Kucoin.Net.Clients.KucoinClient">
-            <inheritdoc cref="T:Kucoin.Net.Interfaces.Clients.IKucoinClient" />
+        <member name="T:Kucoin.Net.Clients.KucoinRestClient">
+            <inheritdoc cref="T:Kucoin.Net.Interfaces.Clients.IKucoinRestClient" />
         </member>
-        <member name="P:Kucoin.Net.Clients.KucoinClient.SpotApi">
+        <member name="P:Kucoin.Net.Clients.KucoinRestClient.SpotApi">
             <inheritdoc />
         </member>
-        <member name="P:Kucoin.Net.Clients.KucoinClient.FuturesApi">
+        <member name="P:Kucoin.Net.Clients.KucoinRestClient.FuturesApi">
             <inheritdoc />
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinClient.#ctor">
-            <summary>
-            Create a new instance of KucoinClient using the default options
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Clients.KucoinClient.#ctor(Kucoin.Net.Objects.KucoinClientOptions)">
+        <member name="M:Kucoin.Net.Clients.KucoinRestClient.#ctor(Microsoft.Extensions.Logging.ILogger{Kucoin.Net.Clients.KucoinRestClient},System.Net.Http.HttpClient)">
             <summary>
             Create a new instance of KucoinClient using provided options
             </summary>
-            <param name="options">The options to use for this client</param>
+            <param name="optionsFunc">The options to use for this client</param>
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinClient.SetApiCredentials(Kucoin.Net.Objects.KucoinApiCredentials)">
+        <member name="M:Kucoin.Net.Clients.KucoinRestClient.#ctor(System.Action{Kucoin.Net.Objects.Options.KucoinRestOptions})">
+            <summary>
+            Create a new instance of KucoinClient using provided options
+            </summary>
+            <param name="optionsFunc">The options to use for this client</param>
+        </member>
+        <member name="M:Kucoin.Net.Clients.KucoinRestClient.#ctor(System.Action{Kucoin.Net.Objects.Options.KucoinRestOptions},System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILogger{Kucoin.Net.Clients.KucoinRestClient})">
+            <summary>
+            Create a new instance of KucoinClient using provided options
+            </summary>
+            <param name="optionsFunc">The options to use for this client</param>
+        </member>
+        <member name="M:Kucoin.Net.Clients.KucoinRestClient.SetApiCredentials(Kucoin.Net.Objects.KucoinApiCredentials)">
             <inheritdoc />
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinClient.SetDefaultOptions(Kucoin.Net.Objects.KucoinClientOptions)">
+        <member name="M:Kucoin.Net.Clients.KucoinRestClient.SetDefaultOptions(System.Action{Kucoin.Net.Objects.Options.KucoinRestOptions})">
             <summary>
             Set the default options to be used when creating new clients
             </summary>
-            <param name="options">Options to use as default</param>
+            <param name="optionsFunc">Options to use as default</param>
         </member>
         <member name="T:Kucoin.Net.Clients.KucoinSocketClient">
             <inheritdoc cref="T:Kucoin.Net.Interfaces.Clients.IKucoinSocketClient" />
@@ -279,22 +286,23 @@
         <member name="P:Kucoin.Net.Clients.KucoinSocketClient.FuturesStreams">
             <inheritdoc />
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.#ctor">
+        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.#ctor(System.Action{Kucoin.Net.Objects.Options.KucoinSocketOptions})">
             <summary>
-            Create a new instance of KucoinSocketClient using the default options
+            Create a new instance of KucoinSocketClient
             </summary>
+            <param name="optionsFunc">Configure the options to use for this client</param>
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.#ctor(Kucoin.Net.Objects.KucoinSocketClientOptions)">
+        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.#ctor(System.Action{Kucoin.Net.Objects.Options.KucoinSocketOptions},Microsoft.Extensions.Logging.ILogger{Kucoin.Net.Clients.KucoinSocketClient})">
             <summary>
-            Create a new instance of KucoinSocketClient using provided options
+            Create a new instance of KucoinSocketClient
             </summary>
-            <param name="options">The options to use for this client</param>
+            <param name="optionsFunc">Configure the options to use for this client</param>
         </member>
-        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.SetDefaultOptions(Kucoin.Net.Objects.KucoinSocketClientOptions)">
+        <member name="M:Kucoin.Net.Clients.KucoinSocketClient.SetDefaultOptions(System.Action{Kucoin.Net.Objects.Options.KucoinSocketOptions})">
             <summary>
             Set the default options to be used when creating new clients
             </summary>
-            <param name="options">Options to use as default</param>
+            <param name="optionsFunc">Configure the options to use as default</param>
         </member>
         <member name="M:Kucoin.Net.Clients.KucoinSocketClient.SetApiCredentials(Kucoin.Net.Objects.KucoinApiCredentials)">
             <summary>
@@ -2331,22 +2339,22 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected and to unsubscribe</returns>
         </member>
-        <member name="T:Kucoin.Net.Interfaces.Clients.IKucoinClient">
+        <member name="T:Kucoin.Net.Interfaces.Clients.IKucoinRestClient">
             <summary>
             Client for accessing the Kucoin Spot API. 
             </summary>
         </member>
-        <member name="P:Kucoin.Net.Interfaces.Clients.IKucoinClient.SpotApi">
+        <member name="P:Kucoin.Net.Interfaces.Clients.IKucoinRestClient.SpotApi">
             <summary>
             Spot API endpoints
             </summary>
         </member>
-        <member name="P:Kucoin.Net.Interfaces.Clients.IKucoinClient.FuturesApi">
+        <member name="P:Kucoin.Net.Interfaces.Clients.IKucoinRestClient.FuturesApi">
             <summary>
             Futures API endpoints
             </summary>
         </member>
-        <member name="M:Kucoin.Net.Interfaces.Clients.IKucoinClient.SetApiCredentials(Kucoin.Net.Objects.KucoinApiCredentials)">
+        <member name="M:Kucoin.Net.Interfaces.Clients.IKucoinRestClient.SetApiCredentials(Kucoin.Net.Objects.KucoinApiCredentials)">
             <summary>
             Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.
             </summary>
@@ -3606,17 +3614,33 @@
             <param name="ct">Cancellation token for closing this subscription</param>
             <returns></returns>
         </member>
+        <member name="T:Kucoin.Net.KucoinEnvironments">
+            <summary>
+            Rest environ
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.KucoinEnvironments.Live">
+            <summary>
+            Live environment
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.KucoinEnvironments.Testnet">
+            <summary>
+            Testnet/sandbox environment
+            </summary>
+        </member>
         <member name="T:Kucoin.Net.KucoinHelpers">
             <summary>
             Helpers for Kucoin
             </summary>
         </member>
-        <member name="M:Kucoin.Net.KucoinHelpers.AddKucoin(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Kucoin.Net.Objects.KucoinClientOptions,Kucoin.Net.Objects.KucoinSocketClientOptions},System.Nullable{Microsoft.Extensions.DependencyInjection.ServiceLifetime})">
+        <member name="M:Kucoin.Net.KucoinHelpers.AddKucoin(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Kucoin.Net.Objects.Options.KucoinRestOptions},System.Action{Kucoin.Net.Objects.Options.KucoinSocketOptions},System.Nullable{Microsoft.Extensions.DependencyInjection.ServiceLifetime})">
             <summary>
             Add the IKucoinClient and IKucoinSocketClient to the sevice collection so they can be injected
             </summary>
             <param name="services">The service collection</param>
-            <param name="defaultOptionsCallback">Set default options for the client</param>
+            <param name="defaultRestOptionsCallback">Set default options for the rest client</param>
+            <param name="defaultSocketOptionsCallback">Set default options for the socket client</param>
             <param name="socketClientLifeTime">The lifetime of the IKucoinSocketClient for the service collection. Defaults to Scoped.</param>
             <returns></returns>
         </member>
@@ -3680,145 +3704,6 @@
         </member>
         <member name="M:Kucoin.Net.Objects.KucoinApiCredentials.Copy">
             <inheritdoc />
-        </member>
-        <member name="T:Kucoin.Net.Objects.KucoinClientOptions">
-            <summary>
-            Options for the KucoinClient
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinClientOptions.Default">
-            <summary>
-            Default options for the spot client
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinClientOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinClientOptions.SpotApiOptions">
-            <summary>
-            Spot API options
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinClientOptions.FuturesApiOptions">
-            <summary>
-            Futures API options
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinClientOptions.#ctor">
-            <summary>
-            ctor
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinClientOptions.#ctor(Kucoin.Net.Objects.KucoinClientOptions)">
-            <summary>
-            ctor
-            </summary>
-            <param name="baseOn">Base the new options on other options</param>
-        </member>
-        <member name="T:Kucoin.Net.Objects.KucoinSocketClientOptions">
-            <summary>
-            Options for the KucoinSocketClient
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinSocketClientOptions.Default">
-            <summary>
-            Default options for the spot client
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinSocketClientOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinSocketClientOptions.SpotStreamsOptions">
-            <summary>
-            Spot stream options
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinSocketClientOptions.FuturesStreamsOptions">
-            <summary>
-            Futures stream options
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinSocketClientOptions.#ctor">
-            <summary>
-            ctor
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinSocketClientOptions.#ctor(Kucoin.Net.Objects.KucoinSocketClientOptions)">
-            <summary>
-            ctor
-            </summary>
-            <param name="baseOn">Base the new options on other options</param>
-        </member>
-        <member name="T:Kucoin.Net.Objects.KucoinRestApiClientOptions">
-            <summary>
-            Kucoin rest client options
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinRestApiClientOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinRestApiClientOptions.#ctor">
-            <summary>
-            ctor
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinRestApiClientOptions.#ctor(System.String)">
-            <summary>
-            ctor
-            </summary>
-            <param name="baseAddress"></param>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinRestApiClientOptions.#ctor(Kucoin.Net.Objects.KucoinRestApiClientOptions,Kucoin.Net.Objects.KucoinRestApiClientOptions)">
-            <summary>
-            ctor
-            </summary>
-            <param name="baseOn"></param>
-            <param name="newValues"></param>
-        </member>
-        <member name="T:Kucoin.Net.Objects.KucoinSocketApiClientOptions">
-            <summary>
-            Socket client options
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinSocketApiClientOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinSocketApiClientOptions.#ctor">
-            <summary>
-            ctor
-            </summary>
-        </member>
-        <member name="M:Kucoin.Net.Objects.KucoinSocketApiClientOptions.#ctor(Kucoin.Net.Objects.KucoinSocketApiClientOptions,Kucoin.Net.Objects.KucoinSocketApiClientOptions)">
-            <summary>
-            ctor
-            </summary>
-            <param name="baseOn"></param>
-            <param name="newValues"></param>
-        </member>
-        <member name="T:Kucoin.Net.Objects.KucoinOrderBookOptions">
-            <summary>
-            Options for the KucoinSymbolOrderBook
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinOrderBookOptions.Limit">
-            <summary>
-            The top amount of results to keep in sync. If for example limit=10 is used, the order book will contain the 10 best bids and 10 best asks. Leaving this null will sync the full order book
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinOrderBookOptions.InitialDataTimeout">
-            <summary>
-            After how much time we should consider the connection dropped if no data is received for this time after the initial subscriptions
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinOrderBookOptions.SocketClient">
-            <summary>
-            The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.KucoinOrderBookOptions.RestClient">
-            <summary>
-            The client to use for the initial order book request
-            </summary>
         </member>
         <member name="T:Kucoin.Net.Objects.Models.Futures.KucoinAccountOverview">
             <summary>
@@ -8874,12 +8759,73 @@
             The symbol
             </summary>
         </member>
+        <member name="T:Kucoin.Net.Objects.Options.KucoinOrderBookOptions">
+            <summary>
+            Options for the KucoinSymbolOrderBook
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinOrderBookOptions.Limit">
+            <summary>
+            The top amount of results to keep in sync. If for example limit=10 is used, the order book will contain the 10 best bids and 10 best asks. Leaving this null will sync the full order book
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinOrderBookOptions.InitialDataTimeout">
+            <summary>
+            After how much time we should consider the connection dropped if no data is received for this time after the initial subscriptions
+            </summary>
+        </member>
+        <member name="T:Kucoin.Net.Objects.Options.KucoinRestOptions">
+            <summary>
+            Kucoin Rest options
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.Default">
+            <summary>
+            Default options for new clients
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.ApiCredentials">
+            <inheritdoc />
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.SpotOptions">
+            <summary>
+            Spot API options
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.FuturesOptions">
+            <summary>
+            Futures API options
+            </summary>
+        </member>
+        <member name="T:Kucoin.Net.Objects.Options.KucoinSocketOptions">
+            <summary>
+            Kucoin socket options
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.Default">
+            <summary>
+            Default options for new clients
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.ApiCredentials">
+            <inheritdoc />
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.SpotOptions">
+            <summary>
+            Spot API options
+            </summary>
+        </member>
+        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.FuturesOptions">
+            <summary>
+            Futures API options
+            </summary>
+        </member>
         <member name="T:Kucoin.Net.SymbolOrderBooks.KucoinFuturesSymbolOrderBook">
             <summary>
             Kucoin order book implementation
             </summary>
         </member>
-        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinFuturesSymbolOrderBook.#ctor(System.String,Kucoin.Net.Objects.KucoinOrderBookOptions)">
+        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinFuturesSymbolOrderBook.#ctor(System.String,Kucoin.Net.Objects.Options.KucoinOrderBookOptions,Microsoft.Extensions.Logging.ILogger{Kucoin.Net.SymbolOrderBooks.KucoinFuturesSymbolOrderBook},Kucoin.Net.Interfaces.Clients.IKucoinRestClient,Kucoin.Net.Interfaces.Clients.IKucoinSocketClient)">
             <summary>
             Create a new order book instance
             </summary>
@@ -8897,17 +8843,47 @@
             Dispose
             </summary>
         </member>
+        <member name="T:Kucoin.Net.SymbolOrderBooks.KucoinOrderBookFactory">
+            <summary>
+            Kucoin order book factory
+            </summary>
+        </member>
+        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinOrderBookFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            ctor
+            </summary>
+            <param name="serviceProvider">Service provider for resolving logging and clients</param>
+        </member>
+        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinOrderBookFactory.CreateSpot(System.String,Kucoin.Net.Objects.Options.KucoinOrderBookOptions)">
+            <summary>
+            Create a spot SymbolOrderBook
+            </summary>
+            <param name="symbol">The symbol</param>
+            <param name="options">Book options</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinOrderBookFactory.CreateFutures(System.String,Kucoin.Net.Objects.Options.KucoinOrderBookOptions)">
+            <summary>
+            Create a futures SymbolOrderBook
+            </summary>
+            <param name="symbol">The symbol</param>
+            <param name="options">Book options</param>
+            <returns></returns>
+        </member>
         <member name="T:Kucoin.Net.SymbolOrderBooks.KucoinSpotSymbolOrderBook">
             <summary>
             Kucoin order book implementation
             </summary>
         </member>
-        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinSpotSymbolOrderBook.#ctor(System.String,Kucoin.Net.Objects.KucoinOrderBookOptions)">
+        <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinSpotSymbolOrderBook.#ctor(System.String,Kucoin.Net.Objects.Options.KucoinOrderBookOptions,Microsoft.Extensions.Logging.ILogger{Kucoin.Net.SymbolOrderBooks.KucoinSpotSymbolOrderBook},Kucoin.Net.Interfaces.Clients.IKucoinRestClient,Kucoin.Net.Interfaces.Clients.IKucoinSocketClient)">
             <summary>
             Create a new order book instance
             </summary>
             <param name="symbol">The symbol the order book is for</param>
             <param name="options">The options for the order book</param>
+            <param name="logger">Logger</param>
+            <param name="restClient">Rest client instance</param>
+            <param name="socketClient">Socket client instance</param>
         </member>
         <member name="M:Kucoin.Net.SymbolOrderBooks.KucoinSpotSymbolOrderBook.DoStartAsync(System.Threading.CancellationToken)">
             <inheritdoc />

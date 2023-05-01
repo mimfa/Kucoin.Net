@@ -30,7 +30,7 @@ namespace Kucoin.Net.UnitTests
                 Message = "Error occured"
             };
 
-            TestHelpers.SetResponse((KucoinClient)client, JsonConvert.SerializeObject(resultObj));
+            TestHelpers.SetResponse((KucoinRestClient)client, JsonConvert.SerializeObject(resultObj));
 
             // act
             var result = await client.SpotApi.ExchangeData.GetAssetsAsync();
@@ -47,7 +47,7 @@ namespace Kucoin.Net.UnitTests
         {
             // arrange
             var client = TestHelpers.CreateClient(new KucoinClientOptions());
-            TestHelpers.SetResponse((KucoinClient)client, "", System.Net.HttpStatusCode.BadRequest);
+            TestHelpers.SetResponse((KucoinRestClient)client, "", System.Net.HttpStatusCode.BadRequest);
 
             // act
             var result = await client.SpotApi.ExchangeData.GetAssetsAsync();
@@ -69,7 +69,7 @@ namespace Kucoin.Net.UnitTests
                 Message = "Error occured"
             };
 
-            TestHelpers.SetResponse((KucoinClient)client, JsonConvert.SerializeObject(resultObj), System.Net.HttpStatusCode.BadRequest);
+            TestHelpers.SetResponse((KucoinRestClient)client, JsonConvert.SerializeObject(resultObj), System.Net.HttpStatusCode.BadRequest);
 
             // act
             var result = await client.SpotApi.ExchangeData.GetAssetsAsync();
@@ -102,7 +102,7 @@ namespace Kucoin.Net.UnitTests
         [Test]
         public void CheckRestInterfaces()
         {
-            var assembly = Assembly.GetAssembly(typeof(KucoinClient));
+            var assembly = Assembly.GetAssembly(typeof(KucoinRestClient));
             var ignore = new string[] { "IKucoinClientSpot" };
             var clientInterfaces = assembly.GetTypes().Where(t => t.Name.StartsWith("IKucoinClientSpot") && !ignore.Contains(t.Name));
 

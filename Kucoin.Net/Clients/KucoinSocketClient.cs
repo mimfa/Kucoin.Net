@@ -18,6 +18,7 @@ using Kucoin.Net.Interfaces.Clients.SpotApi;
 using Kucoin.Net.Interfaces.Clients.FuturesApi;
 using Kucoin.Net.Clients.SpotApi;
 using Kucoin.Net.Clients.FuturesApi;
+using Kucoin.Net.Objects.Options;
 
 namespace Kucoin.Net.Clients
 {
@@ -33,30 +34,41 @@ namespace Kucoin.Net.Clients
 
         #endregion
 
-        /// <summary>
-        /// Create a new instance of KucoinSocketClient using the default options
-        /// </summary>
-        public KucoinSocketClient() : this(KucoinSocketClientOptions.Default)
+        public KucoinSocketClient(ILogger<KucoinSocketClient>? logger = null)  : this ((x) => { }, logger)
         {
         }
 
         /// <summary>
-        /// Create a new instance of KucoinSocketClient using provided options
+        /// Create a new instance of KucoinSocketClient
         /// </summary>
-        /// <param name="options">The options to use for this client</param>
-        public KucoinSocketClient(KucoinSocketClientOptions options) : base("Kucoin", options)
+        /// <param name="optionsFunc">Configure the options to use for this client</param>
+        public KucoinSocketClient(Action<KucoinSocketOptions> optionsFunc) : this(optionsFunc, null)
         {
-            SpotStreams = AddApiClient(new KucoinSocketClientSpotStreams(log, this, options));
-            FuturesStreams = AddApiClient(new KucoinSocketClientFuturesStreams(log, this, options));
+        }
+
+        /// <summary>
+        /// Create a new instance of KucoinSocketClient
+        /// </summary>
+        /// <param name="optionsFunc">Configure the options to use for this client</param>
+        public KucoinSocketClient(Action<KucoinSocketOptions> optionsFunc, ILogger<KucoinSocketClient>? logger = null) : base(logger, "Kucoin")
+        {
+            var options = KucoinSocketOptions.Default.Copy();
+            optionsFunc(options);
+            Initialize(options);
+
+            SpotStreams = AddApiClient(new KucoinSocketClientSpotStreams(_logger, this, options));
+            FuturesStreams = AddApiClient(new KucoinSocketClientFuturesStreams(_logger, this, options));
         }
 
         /// <summary>
         /// Set the default options to be used when creating new clients
         /// </summary>
-        /// <param name="options">Options to use as default</param>
-        public static void SetDefaultOptions(KucoinSocketClientOptions options)
+        /// <param name="optionsFunc">Configure the options to use as default</param>
+        public static void SetDefaultOptions(Action<KucoinSocketOptions> optionsFunc)
         {
-            KucoinSocketClientOptions.Default = options;
+            var options = KucoinSocketOptions.Default.Copy();
+            optionsFunc(options);
+            KucoinSocketOptions.Default = options;
         }
 
         /// <summary>

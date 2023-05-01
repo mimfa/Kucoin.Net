@@ -1,14 +1,14 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.CommonObjects;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Interfaces.CommonClients;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Kucoin.Net.Enums;
 using Kucoin.Net.Interfaces.Clients.FuturesApi;
 using Kucoin.Net.Objects;
 using Kucoin.Net.Objects.Internal;
+using Kucoin.Net.Objects.Options;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +21,8 @@ namespace Kucoin.Net.Clients.FuturesApi
     /// <inheritdoc cref="IKucoinClientFuturesApi" />
     public class KucoinClientFuturesApi : RestApiClient, IKucoinClientFuturesApi, IFuturesClient
     {
-        private readonly KucoinClient _baseClient;
-        private readonly KucoinClientOptions _options;
+        private readonly KucoinRestClient _baseClient;
+        private readonly KucoinRestOptions _options;
 
         internal static TimeSyncState TimeSyncState = new TimeSyncState("Futures Api");
 
@@ -47,12 +47,11 @@ namespace Kucoin.Net.Clients.FuturesApi
         /// <inheritdoc />
         public IKucoinClientFuturesApiTrading Trading { get; }
 
-        internal KucoinClientFuturesApi(Log log, KucoinClient baseClient, KucoinClientOptions options)
-            : base(log, options, options.FuturesApiOptions)
+        internal KucoinClientFuturesApi(ILogger logger, HttpClient? httpClient, KucoinRestClient baseClient, KucoinRestOptions options)
+            : base(logger, httpClient, options.FuturesOptions.TradeEnvironment.Addresses["Rest"], options, options.FuturesOptions)
         {
             _baseClient = baseClient;
             _options = options;
-            _log = log;
 
             Account = new KucoinClientFuturesApiAccount(this);
             ExchangeData = new KucoinClientFuturesApiExchangeData(this);
@@ -100,7 +99,7 @@ namespace Kucoin.Net.Clients.FuturesApi
 
         /// <inheritdoc />
         public override TimeSyncInfo? GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, _options.FuturesApiOptions.AutoTimestamp, _options.FuturesApiOptions.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_logger, _options.FuturesOptions.AutoTimestamp, _options.FuturesOptions.TimestampRecalculationInterval, TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan? GetTimeOffset()

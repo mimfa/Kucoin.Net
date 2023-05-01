@@ -1,6 +1,6 @@
 ﻿using Kucoin.Net.Clients;
 using Kucoin.Net.Interfaces.Clients;
-using Kucoin.Net.Objects;
+using Kucoin.Net.Objects.Options;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.RegularExpressions;
@@ -16,27 +16,26 @@ namespace Kucoin.Net
         /// Add the IKucoinClient and IKucoinSocketClient to the sevice collection so they can be injected
         /// </summary>
         /// <param name="services">The service collection</param>
-        /// <param name="defaultOptionsCallback">Set default options for the client</param>
+        /// <param name="defaultRestOptionsCallback">Set default options for the rest client</param>
+        /// <param name="defaultSocketOptionsCallback">Set default options for the socket client</param>
         /// <param name="socketClientLifeTime">The lifetime of the IKucoinSocketClient for the service collection. Defaults to Scoped.</param>
         /// <returns></returns>
         public static IServiceCollection AddKucoin(
             this IServiceCollection services, 
-            Action<KucoinClientOptions, KucoinSocketClientOptions>? defaultOptionsCallback = null,
+            Action<KucoinRestOptions>? defaultRestOptionsCallback = null,
+            Action<KucoinSocketOptions>? defaultSocketOptionsCallback = null,
             ServiceLifetime? socketClientLifeTime = null)
         {
-            if (defaultOptionsCallback != null)
-            {
-                var options = new KucoinClientOptions();
-                var socketOptions = new KucoinSocketClientOptions();
-                defaultOptionsCallback?.Invoke(options, socketOptions);
+            if (defaultRestOptionsCallback != null)
+                KucoinRestClient.SetDefaultOptions(defaultRestOptionsCallback);
 
-                KucoinClient.SetDefaultOptions(options);
-                KucoinSocketClient.SetDefaultOptions(socketOptions);
-            }
-
-            services.AddTransient<IKucoinClient, KucoinClient>();
+            if (defaultSocketOptionsCallback != null)
+                KucoinSocketClient.SetDefaultOptions(defaultSocketOptionsCallback);
+            
+            services.AddHttpClient()
+            services.AddTransient<IKucoinRestClient, KucoinRestClient>();
             if (socketClientLifeTime == null)
-                services.AddScoped<IKucoinSocketClient, KucoinSocketClient>();
+                services.AddSingleton<IKucoinSocketClient, KucoinSocketClient>();
             else
                 services.Add(new ServiceDescriptor(typeof(IKucoinSocketClient), typeof(KucoinSocketClient), socketClientLifeTime.Value));
             return services;

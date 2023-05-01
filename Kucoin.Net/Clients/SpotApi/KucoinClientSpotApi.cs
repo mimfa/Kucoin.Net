@@ -1,14 +1,14 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.CommonObjects;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Interfaces.CommonClients;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Kucoin.Net.Enums;
 using Kucoin.Net.Interfaces.Clients.SpotApi;
 using Kucoin.Net.Objects;
 using Kucoin.Net.Objects.Internal;
+using Kucoin.Net.Objects.Options;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -48,9 +48,8 @@ namespace Kucoin.Net.Clients.SpotApi
         /// <inheritdoc />
         public IKucoinClientSpotApiProAccount ProAccount { get; }
 
-
-        internal KucoinClientSpotApi(Log log, KucoinClient baseClient, KucoinClientOptions options)
-            : base(log, options, options.SpotApiOptions)
+        internal KucoinClientSpotApi(ILogger logger, HttpClient? httpClient, KucoinRestClient baseClient, KucoinRestOptions options)
+            : base(logger, httpClient, options.SpotOptions.TradeEnvironment.Addresses["Rest"], options, options.SpotOptions)
         {
             Account = new KucoinClientSpotApiAccount(this);
             ExchangeData = new KucoinClientSpotApiExchangeData(this);
@@ -401,7 +400,7 @@ namespace Kucoin.Net.Clients.SpotApi
 
         /// <inheritdoc />
         public override TimeSyncInfo? GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_logger, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan? GetTimeOffset()

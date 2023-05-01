@@ -11,7 +11,7 @@ namespace Kucoin.Net.UnitTests
     [TestFixture]
     public class JsonTests
     {
-        private JsonToObjectComparer<IKucoinClient> _comparerSpot = new JsonToObjectComparer<IKucoinClient>((json) => TestHelpers.CreateResponseClient(json, new KucoinClientOptions()
+        private JsonToObjectComparer<IKucoinRestClient> _comparerSpot = new JsonToObjectComparer<IKucoinRestClient>((json) => TestHelpers.CreateResponseClient(json, new KucoinClientOptions()
         {
             ApiCredentials = new KucoinApiCredentials("1234", "1234", "12"),
             SpotApiOptions = new KucoinRestApiClientOptions { RateLimiters = new List<IRateLimiter>(), OutputOriginalData  = true },
