@@ -3,14 +3,18 @@
 namespace Kucoin.Net.Objects.Options
 {
     /// <summary>
-    /// Kucoin socket options
+    /// Kucoin socket client options
     /// </summary>
-    public class KucoinSocketOptions : ExchangeOptions
+    public class KucoinSocketOptions : SocketExchangeOptions<KucoinEnvironment>
     {
         /// <summary>
         /// Default options for new clients
         /// </summary>
-        public static KucoinSocketOptions Default { get; set; } = new KucoinSocketOptions();
+        public static KucoinSocketOptions Default { get; set; } = new KucoinSocketOptions()
+        {
+            Environment = KucoinEnvironment.Live,
+            SocketSubscriptionsCombineTarget = 10
+        };
 
         /// <inheritdoc />
         public new KucoinApiCredentials? ApiCredentials
@@ -24,8 +28,6 @@ namespace Kucoin.Net.Objects.Options
         /// </summary>
         public KucoinSocketApiOptions SpotOptions { get; private set; } = new KucoinSocketApiOptions()
         {
-            TradeEnvironment = KucoinEnvironments.Live,
-            SocketSubscriptionsCombineTarget = 10,
             MaxSocketConnections = 50
         };
 
@@ -34,8 +36,6 @@ namespace Kucoin.Net.Objects.Options
         /// </summary>
         public KucoinSocketApiOptions FuturesOptions { get; private set; } = new KucoinSocketApiOptions()
         {
-            TradeEnvironment = KucoinEnvironments.Live,
-            SocketSubscriptionsCombineTarget = 10,
             MaxSocketConnections = 50
         };
 

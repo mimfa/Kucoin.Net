@@ -13,11 +13,11 @@ namespace Kucoin.Net.Interfaces.Clients
         /// <summary>
         /// Spot API endpoints
         /// </summary>
-        IKucoinClientSpotApi SpotApi { get; }
+        IKucoinRestClientSpotApi SpotApi { get; }
         /// <summary>
         /// Futures API endpoints
         /// </summary>
-        IKucoinClientFuturesApi FuturesApi { get; }
+        IKucoinRestClientFuturesApi FuturesApi { get; }
 
         /// <summary>
         /// Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.

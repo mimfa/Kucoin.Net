@@ -21,17 +21,15 @@ using Kucoin.Net.Objects.Options;
 
 namespace Kucoin.Net.Clients.FuturesApi
 {
-    /// <inheritdoc cref="IKucoinSocketClientFuturesStreams" />
-    public class KucoinSocketClientFuturesStreams : SocketApiClient, IKucoinSocketClientFuturesStreams
+    /// <inheritdoc cref="IKucoinSocketClientFuturesApi" />
+    public class KucoinSocketClientFuturesApi : SocketApiClient, IKucoinSocketClientFuturesApi
     {
         private readonly KucoinSocketClient _baseClient;
-        private readonly KucoinSocketOptions _options;
 
-        internal KucoinSocketClientFuturesStreams(ILogger logger, KucoinSocketClient baseClient, KucoinSocketOptions options)
-            : base(logger, options.SpotOptions.TradeEnvironment.Addresses["Socket"], options, options.FuturesOptions)
+        internal KucoinSocketClientFuturesApi(ILogger logger, KucoinSocketClient baseClient, KucoinSocketOptions options)
+            : base(logger, options.Environment.FuturesAddress, options, options.FuturesOptions)
         {
             _baseClient = baseClient;
-            _options = options;
 
             SendPeriodic("Ping", TimeSpan.FromSeconds(30), (connection) => new KucoinPing()
             {
@@ -283,7 +281,7 @@ namespace Kucoin.Net.Clients.FuturesApi
                 options.ApiCredentials = apiCredentials;
             }))
             {
-                WebCallResult<KucoinToken> tokenResult = await ((KucoinClientFuturesApiAccount)restClient.FuturesApi.Account).GetWebsocketToken(authenticated).ConfigureAwait(false);
+                WebCallResult<KucoinToken> tokenResult = await ((KucoinRestClientFuturesApiAccount)restClient.FuturesApi.Account).GetWebsocketToken(authenticated).ConfigureAwait(false);
                 if (!tokenResult)
                     return tokenResult.As<string?>(null);
 
@@ -459,15 +457,6 @@ namespace Kucoin.Net.Clients.FuturesApi
                 return default!;
             }
             return desResult.Data.Data;
-        }
-
-        internal string? TryGetSymbolFromTopic(DataEvent<JToken> data)
-        {
-            string? symbol = null;
-            var topic = data.Data["topic"]?.ToString();
-            if (topic != null && topic.Contains(':'))
-                symbol = topic.Split(':').Last();
-            return symbol;
         }
     }
 }

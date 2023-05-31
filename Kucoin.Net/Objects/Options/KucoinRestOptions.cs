@@ -7,14 +7,17 @@ using System.Collections.Generic;
 namespace Kucoin.Net.Objects.Options
 {
     /// <summary>
-    /// Kucoin Rest options
+    /// Kucoin Rest client options
     /// </summary>
-    public class KucoinRestOptions : ExchangeOptions
+    public class KucoinRestOptions : RestExchangeOptions<KucoinEnvironment>
     {
         /// <summary>
         /// Default options for new clients
         /// </summary>
-        public static KucoinRestOptions Default { get; set; } = new KucoinRestOptions();
+        public static KucoinRestOptions Default { get; set; } = new KucoinRestOptions()
+        {
+            Environment = KucoinEnvironment.Live
+        };
 
         /// <inheritdoc />
         public new KucoinApiCredentials? ApiCredentials
@@ -26,9 +29,8 @@ namespace Kucoin.Net.Objects.Options
         /// <summary>
         /// Spot API options
         /// </summary>
-        public KucoinHttpApiOptions SpotOptions { get; private set; } = new KucoinHttpApiOptions()
+        public KucoinRestApiOptions SpotOptions { get; private set; } = new KucoinRestApiOptions()
         {
-            TradeEnvironment = KucoinEnvironments.Live,
             RateLimiters = new List<IRateLimiter>
             {
                      new RateLimiter()
@@ -41,16 +43,13 @@ namespace Kucoin.Net.Objects.Options
         /// <summary>
         /// Futures API options
         /// </summary>
-        public KucoinHttpApiOptions FuturesOptions { get; private set; } = new KucoinHttpApiOptions()
-        {
-            TradeEnvironment = KucoinEnvironments.Live
-        };
+        public KucoinRestApiOptions FuturesOptions { get; private set; } = new KucoinRestApiOptions();
 
         internal KucoinRestOptions Copy()
         {
             var options = Copy<KucoinRestOptions>();
-            options.SpotOptions = SpotOptions.Copy<KucoinHttpApiOptions>();
-            options.FuturesOptions = FuturesOptions.Copy<KucoinHttpApiOptions>();
+            options.SpotOptions = SpotOptions.Copy<KucoinRestApiOptions>();
+            options.FuturesOptions = FuturesOptions.Copy<KucoinRestApiOptions>();
             return options;
         }
     }

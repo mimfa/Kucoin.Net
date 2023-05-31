@@ -2,8 +2,12 @@
 
 namespace Kucoin.Net.Objects.Options
 {
-    public class KucoinHttpApiOptions : HttpApiOptions
+    /// <summary>
+    /// Options for the Kucoin rest API
+    /// </summary>
+    public class KucoinRestApiOptions : RestApiOptions
     {
+        /// <inheritdoc />
         public new KucoinApiCredentials? ApiCredentials
         {
             get => (KucoinApiCredentials?)base.ApiCredentials;

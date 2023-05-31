@@ -22,7 +22,7 @@ namespace Kucoin.Net.UnitTests
         public async Task ReceivingError_Should_ReturnErrorAndNotSuccess()
         {
             // arrange
-            var client = TestHelpers.CreateClient(new KucoinClientOptions());
+            var client = TestHelpers.CreateClient();
             var resultObj = new KucoinResult<object>()
             {
                 Code = 400001,
@@ -46,7 +46,7 @@ namespace Kucoin.Net.UnitTests
         public async Task ReceivingHttpErrorWithNoJson_Should_ReturnErrorAndNotSuccess()
         {
             // arrange
-            var client = TestHelpers.CreateClient(new KucoinClientOptions());
+            var client = TestHelpers.CreateClient();
             TestHelpers.SetResponse((KucoinRestClient)client, "", System.Net.HttpStatusCode.BadRequest);
 
             // act
@@ -61,7 +61,7 @@ namespace Kucoin.Net.UnitTests
         public async Task ReceivingHttpErrorWithJsonError_Should_ReturnErrorAndNotSuccess()
         {
             // arrange
-            var client = TestHelpers.CreateClient(new KucoinClientOptions());
+            var client = TestHelpers.CreateClient();
             var resultObj = new KucoinResult<object>()
             {
                 Code = 400001,
@@ -123,7 +123,7 @@ namespace Kucoin.Net.UnitTests
         [Test]
         public void CheckSocketInterfaces()
         {
-            var assembly = Assembly.GetAssembly(typeof(KucoinSocketClientSpotStreams));
+            var assembly = Assembly.GetAssembly(typeof(KucoinSocketClientSpotApi));
             var clientInterfaces = assembly.GetTypes().Where(t => t.Name.StartsWith("IKucoinSocketClientSpot"));
 
             foreach (var clientInterface in clientInterfaces)

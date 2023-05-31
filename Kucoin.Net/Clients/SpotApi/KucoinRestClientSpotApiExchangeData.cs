@@ -18,11 +18,11 @@ using Kucoin.Net.Objects;
 namespace Kucoin.Net.Clients.SpotApi
 {
     /// <inheritdoc />
-    public class KucoinClientSpotApiExchangeData : IKucoinClientSpotApiExchangeData
+    public class KucoinRestClientSpotApiExchangeData : IKucoinRestClientSpotApiExchangeData
     {
-        private readonly KucoinClientSpotApi _baseClient;
+        private readonly KucoinRestClientSpotApi _baseClient;
 
-        internal KucoinClientSpotApiExchangeData(KucoinClientSpotApi baseClient)
+        internal KucoinRestClientSpotApiExchangeData(KucoinRestClientSpotApi baseClient)
         {
             _baseClient = baseClient;
         }

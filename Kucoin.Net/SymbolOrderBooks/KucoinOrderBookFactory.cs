@@ -1,4 +1,5 @@
 ﻿using CryptoExchange.Net.Interfaces;
+using Kucoin.Net.Interfaces;
 using Kucoin.Net.Interfaces.Clients;
 using Kucoin.Net.Objects.Options;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,7 @@ namespace Kucoin.Net.SymbolOrderBooks
     /// <summary>
     /// Kucoin order book factory
     /// </summary>
-    public class KucoinOrderBookFactory
+    public class KucoinOrderBookFactory : IKucoinOrderBookFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -29,7 +30,7 @@ namespace Kucoin.Net.SymbolOrderBooks
         /// <param name="symbol">The symbol</param>
         /// <param name="options">Book options</param>
         /// <returns></returns>
-        public ISymbolOrderBook CreateSpot(string symbol, KucoinOrderBookOptions? options = null) 
+        public ISymbolOrderBook CreateSpot(string symbol, Action<KucoinOrderBookOptions>? options = null)
             => new KucoinSpotSymbolOrderBook(symbol,
                                              options,
                                              _serviceProvider.GetRequiredService<ILogger<KucoinSpotSymbolOrderBook>>(),
@@ -42,7 +43,7 @@ namespace Kucoin.Net.SymbolOrderBooks
         /// <param name="symbol">The symbol</param>
         /// <param name="options">Book options</param>
         /// <returns></returns>
-        public ISymbolOrderBook CreateFutures(string symbol, KucoinOrderBookOptions? options = null)
+        public ISymbolOrderBook CreateFutures(string symbol, Action<KucoinOrderBookOptions>? options = null)
             => new KucoinFuturesSymbolOrderBook(symbol,
                                                 options,
                                                 _serviceProvider.GetRequiredService<ILogger<KucoinFuturesSymbolOrderBook>>(),

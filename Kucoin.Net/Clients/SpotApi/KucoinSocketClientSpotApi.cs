@@ -23,14 +23,17 @@ using Kucoin.Net.Objects.Options;
 
 namespace Kucoin.Net.Clients.SpotApi
 {
-    /// <inheritdoc cref="IKucoinSocketClientSpotStreams" />
-    public class KucoinSocketClientSpotStreams : SocketApiClient, IKucoinSocketClientSpotStreams
+    /// <inheritdoc cref="IKucoinSocketClientSpotApi" />
+    public class KucoinSocketClientSpotApi : SocketApiClient, IKucoinSocketClientSpotApi
     {
         private readonly KucoinSocketClient _baseClient;
         private readonly KucoinSocketOptions _options;
 
-        internal KucoinSocketClientSpotStreams(ILogger logger, KucoinSocketClient baseClient, KucoinSocketOptions options)
-            : base(logger, options.SpotOptions.TradeEnvironment.Addresses["Socket"], options, options.SpotOptions)
+        /// <inheritdoc />
+        public new KucoinSocketOptions ClientOptions => (KucoinSocketOptions)base.ClientOptions;
+
+        internal KucoinSocketClientSpotApi(ILogger logger, KucoinSocketClient baseClient, KucoinSocketOptions options)
+            : base(logger, options.Environment.SpotAddress, options, options.SpotOptions)
         {
             _baseClient = baseClient;
             _options = options;
@@ -358,13 +361,14 @@ namespace Kucoin.Net.Clients.SpotApi
         /// <inheritdoc />
         protected override async Task<CallResult<string?>> GetConnectionUrlAsync(string address, bool authenticated)
         {
-            var apiCredentials = (KucoinApiCredentials?)(Options.ApiCredentials ?? _baseClient.ClientOptions.ApiCredentials ?? KucoinSocketOptions.Default.ApiCredentials ?? KucoinRestOptions.Default.ApiCredentials);
+            var apiCredentials = (KucoinApiCredentials?)(Options.ApiCredentials ?? _baseClient.ClientOptions.ApiCredentials);
             using (var restClient = new KucoinRestClient((options) =>
             {
                 options.ApiCredentials = apiCredentials;
+                options.Environment = ClientOptions.Environment;
             }))
             {
-                WebCallResult<KucoinToken> tokenResult = await ((KucoinClientSpotApiAccount)restClient.SpotApi.Account).GetWebsocketToken(authenticated).ConfigureAwait(false);
+                WebCallResult<KucoinToken> tokenResult = await ((KucoinRestClientSpotApiAccount)restClient.SpotApi.Account).GetWebsocketToken(authenticated).ConfigureAwait(false);
                 if (!tokenResult)
                     return tokenResult.As<string?>(null);
 
@@ -522,7 +526,6 @@ namespace Kucoin.Net.Clients.SpotApi
 
             return success;
         }
-
 
         internal static void InvokeHandler<T>(T data, Action<T> handler)
         {

@@ -8,11 +8,11 @@ using CryptoExchange.Net.Sockets;
 using Kucoin.Net.Clients;
 using Kucoin.Net.Enums;
 using Kucoin.Net.Interfaces.Clients;
-using Kucoin.Net.Objects;
 using Kucoin.Net.Objects.Models.Futures.Socket;
 using Kucoin.Net.Objects.Models.Spot;
 using Kucoin.Net.Objects.Models.Spot.Socket;
 using Kucoin.Net.Objects.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Kucoin.Net.SymbolOrderBooks
@@ -25,26 +25,47 @@ namespace Kucoin.Net.SymbolOrderBooks
         private readonly IKucoinRestClient _restClient;
         private readonly IKucoinSocketClient _socketClient;
         private readonly TimeSpan _initialDataTimeout;
+        private readonly bool _clientOwner;
 
         /// <summary>
         /// Create a new order book instance
         /// </summary>
         /// <param name="symbol">The symbol the order book is for</param>
-        /// <param name="options">The options for the order book</param>
-        internal KucoinFuturesSymbolOrderBook(
-            string symbol, 
-            KucoinOrderBookOptions? options = null,
-            ILogger<KucoinFuturesSymbolOrderBook>? logger = null,
-            IKucoinRestClient? kucoinClient = null,
-            IKucoinSocketClient? socketClient = null) : base(logger, "Kucoin", symbol, options ?? new KucoinOrderBookOptions())
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public KucoinFuturesSymbolOrderBook(string symbol, Action<KucoinOrderBookOptions>? optionsDelegate = null)
+            : this(symbol, optionsDelegate, null, null, null)
         {
-            strictLevels = false;
-            sequencesAreConsecutive = options?.Limit == null;
+            _clientOwner = true;
+        }
+
+        /// <summary>
+        /// Create a new order book instance
+        /// </summary>
+        /// <param name="symbol">The symbol the order book is for</param>
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        /// <param name="logger">Logger</param>
+        /// <param name="restClient">Rest client instance</param>
+        /// <param name="socketClient">Socket client instance</param>
+        [ActivatorUtilitiesConstructor]
+        internal KucoinFuturesSymbolOrderBook(
+            string symbol,
+            Action<KucoinOrderBookOptions>? optionsDelegate,
+            ILogger<KucoinFuturesSymbolOrderBook>? logger = null,
+            IKucoinRestClient? restClient = null,
+            IKucoinSocketClient? socketClient = null) : base(logger, "Kucoin", symbol)
+        {
+            var options = KucoinOrderBookOptions.Default.Copy();
+            if (optionsDelegate != null)
+                optionsDelegate(options);
+            Initialize(options);
+
+            _strictLevels = false;
+            _sequencesAreConsecutive = options?.Limit == null;
 
             Levels = options?.Limit;
             _initialDataTimeout = options?.InitialDataTimeout ?? TimeSpan.FromSeconds(30);
             _socketClient = socketClient ?? new KucoinSocketClient();
-            _restClient = kucoinClient ?? new KucoinRestClient();
+            _restClient = restClient ?? new KucoinRestClient();
         }
 
         /// <inheritdoc />
@@ -53,7 +74,7 @@ namespace Kucoin.Net.SymbolOrderBooks
             CallResult<UpdateSubscription> subResult;
             if (Levels == null)
             {
-                subResult = await _socketClient.FuturesStreams.SubscribeToOrderBookUpdatesAsync(Symbol, HandleFullUpdate).ConfigureAwait(false);
+                subResult = await _socketClient.FuturesApi.SubscribeToOrderBookUpdatesAsync(Symbol, HandleFullUpdate).ConfigureAwait(false);
                 if (!subResult)
                     return subResult;
 
@@ -75,7 +96,7 @@ namespace Kucoin.Net.SymbolOrderBooks
             }
             else
             {
-                subResult = await _socketClient.FuturesStreams.SubscribeToPartialOrderBookUpdatesAsync(Symbol, Levels.Value, HandleUpdate).ConfigureAwait(false);
+                subResult = await _socketClient.FuturesApi.SubscribeToPartialOrderBookUpdatesAsync(Symbol, Levels.Value, HandleUpdate).ConfigureAwait(false);
                 if (ct.IsCancellationRequested)
                 {
                     await subResult.Data.CloseAsync().ConfigureAwait(false);
@@ -135,6 +156,12 @@ namespace Kucoin.Net.SymbolOrderBooks
         /// </summary>
         protected override void Dispose(bool disposing)
         {
+            if (_clientOwner)
+            {
+                _socketClient?.Dispose();
+                _restClient?.Dispose();
+            }
+
             base.Dispose(disposing);
         }
     }
