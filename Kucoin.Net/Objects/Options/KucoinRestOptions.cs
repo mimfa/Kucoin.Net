@@ -9,7 +9,7 @@ namespace Kucoin.Net.Objects.Options
     /// <summary>
     /// Kucoin Rest client options
     /// </summary>
-    public class KucoinRestOptions : RestExchangeOptions<KucoinEnvironment>
+    public class KucoinRestOptions : RestExchangeOptions<KucoinEnvironment, KucoinApiCredentials>
     {
         /// <summary>
         /// Default options for new clients
@@ -19,17 +19,10 @@ namespace Kucoin.Net.Objects.Options
             Environment = KucoinEnvironment.Live
         };
 
-        /// <inheritdoc />
-        public new KucoinApiCredentials? ApiCredentials
-        {
-            get => (KucoinApiCredentials?)base.ApiCredentials;
-            set => base.ApiCredentials = value;
-        }
-
         /// <summary>
         /// Spot API options
         /// </summary>
-        public KucoinRestApiOptions SpotOptions { get; private set; } = new KucoinRestApiOptions()
+        public RestApiOptions<KucoinApiCredentials> SpotOptions { get; private set; } = new RestApiOptions<KucoinApiCredentials>()
         {
             RateLimiters = new List<IRateLimiter>
             {
@@ -43,13 +36,13 @@ namespace Kucoin.Net.Objects.Options
         /// <summary>
         /// Futures API options
         /// </summary>
-        public KucoinRestApiOptions FuturesOptions { get; private set; } = new KucoinRestApiOptions();
+        public RestApiOptions<KucoinApiCredentials> FuturesOptions { get; private set; } = new RestApiOptions<KucoinApiCredentials>();
 
         internal KucoinRestOptions Copy()
         {
             var options = Copy<KucoinRestOptions>();
-            options.SpotOptions = SpotOptions.Copy<KucoinRestApiOptions>();
-            options.FuturesOptions = FuturesOptions.Copy<KucoinRestApiOptions>();
+            options.SpotOptions = SpotOptions.Copy<RestApiOptions<KucoinApiCredentials>>();
+            options.FuturesOptions = FuturesOptions.Copy<RestApiOptions<KucoinApiCredentials>>();
             return options;
         }
     }

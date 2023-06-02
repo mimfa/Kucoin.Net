@@ -22,7 +22,7 @@ namespace Kucoin.Net.Clients.SpotApi
     /// <inheritdoc cref="IKucoinRestClientSpotApi" />
     public class KucoinRestClientSpotApi : RestApiClient, IKucoinRestClientSpotApi, ISpotClient
     {
-        internal static TimeSyncState TimeSyncState = new TimeSyncState("Spot Api");
+        internal static TimeSyncState _timeSyncState = new TimeSyncState("Spot Api");
 
         /// <summary>
         /// Event triggered when an order is placed via this client. Only available for Spot orders
@@ -398,11 +398,11 @@ namespace Kucoin.Net.Clients.SpotApi
 
         /// <inheritdoc />
         public override TimeSyncInfo? GetTimeSyncInfo()
-            => new TimeSyncInfo(_logger, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_logger, ApiOptions.AutoTimestamp, ApiOptions.TimestampRecalculationInterval, _timeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan? GetTimeOffset()
-            => TimeSyncState.TimeOffset;
+            => _timeSyncState.TimeOffset;
 
         /// <inheritdoc />
         public ISpotClient CommonSpotClient => this;

@@ -27,7 +27,6 @@ namespace Kucoin.Net.Clients.SpotApi
     public class KucoinSocketClientSpotApi : SocketApiClient, IKucoinSocketClientSpotApi
     {
         private readonly KucoinSocketClient _baseClient;
-        private readonly KucoinSocketOptions _options;
 
         /// <inheritdoc />
         public new KucoinSocketOptions ClientOptions => (KucoinSocketOptions)base.ClientOptions;
@@ -36,7 +35,6 @@ namespace Kucoin.Net.Clients.SpotApi
             : base(logger, options.Environment.SpotAddress, options, options.SpotOptions)
         {
             _baseClient = baseClient;
-            _options = options;
 
             SendPeriodic("Ping", TimeSpan.FromSeconds(30), (connection) => new KucoinPing()
             {
@@ -361,7 +359,7 @@ namespace Kucoin.Net.Clients.SpotApi
         /// <inheritdoc />
         protected override async Task<CallResult<string?>> GetConnectionUrlAsync(string address, bool authenticated)
         {
-            var apiCredentials = (KucoinApiCredentials?)(Options.ApiCredentials ?? _baseClient.ClientOptions.ApiCredentials);
+            var apiCredentials = (KucoinApiCredentials?)(ApiOptions.ApiCredentials ?? _baseClient.ClientOptions.ApiCredentials);
             using (var restClient = new KucoinRestClient((options) =>
             {
                 options.ApiCredentials = apiCredentials;

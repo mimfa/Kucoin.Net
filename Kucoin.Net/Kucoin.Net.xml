@@ -8819,14 +8819,6 @@
             After how much time we should consider the connection dropped if no data is received for this time after the initial subscriptions
             </summary>
         </member>
-        <member name="T:Kucoin.Net.Objects.Options.KucoinRestApiOptions">
-            <summary>
-            Options for the Kucoin rest API
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.Options.KucoinRestApiOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
         <member name="T:Kucoin.Net.Objects.Options.KucoinRestOptions">
             <summary>
             Kucoin Rest client options
@@ -8836,9 +8828,6 @@
             <summary>
             Default options for new clients
             </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.ApiCredentials">
-            <inheritdoc />
         </member>
         <member name="P:Kucoin.Net.Objects.Options.KucoinRestOptions.SpotOptions">
             <summary>
@@ -8850,14 +8839,6 @@
             Futures API options
             </summary>
         </member>
-        <member name="T:Kucoin.Net.Objects.Options.KucoinSocketApiOptions">
-            <summary>
-            Options for the Kucoin rest API
-            </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketApiOptions.ApiCredentials">
-            <inheritdoc />
-        </member>
         <member name="T:Kucoin.Net.Objects.Options.KucoinSocketOptions">
             <summary>
             Kucoin socket client options
@@ -8867,9 +8848,6 @@
             <summary>
             Default options for new clients
             </summary>
-        </member>
-        <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.ApiCredentials">
-            <inheritdoc />
         </member>
         <member name="P:Kucoin.Net.Objects.Options.KucoinSocketOptions.SpotOptions">
             <summary>

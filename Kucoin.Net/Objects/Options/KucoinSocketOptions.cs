@@ -5,7 +5,7 @@ namespace Kucoin.Net.Objects.Options
     /// <summary>
     /// Kucoin socket client options
     /// </summary>
-    public class KucoinSocketOptions : SocketExchangeOptions<KucoinEnvironment>
+    public class KucoinSocketOptions : SocketExchangeOptions<KucoinEnvironment, KucoinApiCredentials>
     {
         /// <summary>
         /// Default options for new clients
@@ -16,17 +16,10 @@ namespace Kucoin.Net.Objects.Options
             SocketSubscriptionsCombineTarget = 10
         };
 
-        /// <inheritdoc />
-        public new KucoinApiCredentials? ApiCredentials
-        {
-            get => (KucoinApiCredentials?)base.ApiCredentials;
-            set => base.ApiCredentials = value;
-        }
-
         /// <summary>
         /// Spot API options
         /// </summary>
-        public KucoinSocketApiOptions SpotOptions { get; private set; } = new KucoinSocketApiOptions()
+        public SocketApiOptions<KucoinApiCredentials> SpotOptions { get; private set; } = new SocketApiOptions<KucoinApiCredentials>()
         {
             MaxSocketConnections = 50
         };
@@ -34,7 +27,7 @@ namespace Kucoin.Net.Objects.Options
         /// <summary>
         /// Futures API options
         /// </summary>
-        public KucoinSocketApiOptions FuturesOptions { get; private set; } = new KucoinSocketApiOptions()
+        public SocketApiOptions<KucoinApiCredentials> FuturesOptions { get; private set; } = new SocketApiOptions<KucoinApiCredentials>()
         {
             MaxSocketConnections = 50
         };
@@ -42,8 +35,8 @@ namespace Kucoin.Net.Objects.Options
         internal KucoinSocketOptions Copy()
         {
             var options = Copy<KucoinSocketOptions>();
-            options.SpotOptions = SpotOptions.Copy<KucoinSocketApiOptions>();
-            options.FuturesOptions = FuturesOptions.Copy<KucoinSocketApiOptions>();
+            options.SpotOptions = SpotOptions.Copy<SocketApiOptions<KucoinApiCredentials>>();
+            options.FuturesOptions = FuturesOptions.Copy<SocketApiOptions<KucoinApiCredentials>>();
             return options;
         }
     }
